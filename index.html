@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Templatesbr</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -92,53 +92,66 @@
             transform: scale(1.05);
         }
 
-        /* Estilos para menu responsivo */
+        /* Menu responsivo */
         .menu-toggle {
             display: none;
             cursor: pointer;
+            flex-direction: column;
+            justify-content: center;
+            height: 24px;
+            width: 30px;
+            gap: 5px;
         }
 
         .menu-toggle div {
-            width: 25px;
+            width: 100%;
             height: 3px;
             background-color: #4b5563; /* cinza escuro */
-            margin: 5px 0;
-            transition: 0.4s;
+            border-radius: 2px;
+            transition: all 0.3s ease;
         }
 
         @media (max-width: 768px) {
-            nav a {
-                display: block;
-                padding: 1rem 0;
-                border-top: 1px solid #e5e7eb; /* cinza claro */
-            }
-
             nav {
-                display: none;
-                flex-direction: column;
-                background-color: white;
-                position: absolute;
+                position: fixed;
                 top: 64px; /* altura do header */
                 right: 0;
-                width: 100%;
-                max-width: 300px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                border-radius: 0 0 0 10px;
+                background: white;
+                width: 250px;
+                height: calc(100% - 64px);
+                box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                padding: 1rem;
                 z-index: 999;
             }
 
             nav.active {
-                display: flex;
+                transform: translateX(0);
+            }
+
+            nav a {
+                padding: 1rem 0;
+                border-bottom: 1px solid #e5e7eb;
+                color: #4b5563;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+            nav a:hover {
+                color: #06048d;
             }
 
             .menu-toggle {
-                display: block;
+                display: flex;
             }
         }
 
-        /* Animação do botão hambúrguer quando ativo */
+        /* Animação do botão hamburguer */
         .menu-toggle.active div:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
+            transform: rotate(45deg) translate(5px, 5px);
         }
 
         .menu-toggle.active div:nth-child(2) {
@@ -146,16 +159,15 @@
         }
 
         .menu-toggle.active div:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+            transform: rotate(-45deg) translate(5px, -5px);
         }
     </style>
 </head>
 
 <body class="text-gray-800">
     <!-- Header -->
-    <header class="bg-white shadow-md relative">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4 relative z-20">
+    <header class="bg-white shadow-md fixed w-full z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
             <h1 class="text-2xl font-bold text-gray-900">TemplatesBR</h1>
 
             <!-- Botão menu hamburguer para mobile -->
@@ -165,28 +177,20 @@
                 <div></div>
             </div>
 
-            <nav id="navMenu" class="flex space-x-4">
-                <a href="#templates" class="text-gray-600 hover:text-gray-900 px-4">Templates</a>
-                <a href="#" id="openModal" class="text-gray-600 hover:text-gray-900 px-4">Tabela Preços</a>
-
-                <!-- Modal -->
-                <div id="priceModal" class="modal" style="display:none;">
-                    <div class="modal-content">
-                        <span class="close" aria-label="Fechar modal">&times;</span>
-                        <img src="..\Site templatesbr\Fotos\tabela.png" alt="Tabela de Preços"
-                            style="max-width: 100%; height: auto;" />
-                    </div>
-                </div>
+            <nav id="navMenu" aria-label="Menu principal">
+                <a href="#templates" class="hover:text-gray-900">Templates</a>
+                <a href="#" id="openModal" class="hover:text-gray-900">Tabela Preços</a>
             </nav>
         </div>
     </header>
-    <div style="max-width: 600px; margin: 0 auto;">
+
+    <div style="max-width: 600px; margin: 80px auto 0 auto;">
         <img id="tabela-precos" src="..\Site templatesbr\Fotos\tabela.png" alt="Tabela de Preços"
             style="display: none; width: 100%; height: auto;" />
     </div>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section pt-32">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl md:text-6xl font-bold mb-4">Templates Profissionais</h2>
             <p class="text-xl md:text-2xl mb-8">Explore nossa coleção de templates modernos para impulsionar seu
@@ -279,23 +283,20 @@
             document.getElementById('templates').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Pegando os elementos do modal
+        // Modal
         const modal = document.getElementById('priceModal');
         const openModalBtn = document.getElementById('openModal');
         const closeBtn = modal.querySelector('.close');
 
-        // Abrir modal
         openModalBtn.addEventListener('click', function (e) {
-            e.preventDefault(); // Evita o link padrão
+            e.preventDefault();
             modal.style.display = 'flex';
         });
 
-        // Fechar modal quando clicar no "x"
         closeBtn.addEventListener('click', function () {
             modal.style.display = 'none';
         });
 
-        // Fechar modal quando clicar fora do conteúdo
         window.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -311,7 +312,7 @@
             menuToggle.classList.toggle('active');
         });
 
-        // Permitir abrir/fechar menu com Enter ou Espaço para acessibilidade
+        // Acessibilidade: abrir/fechar menu com Enter ou Espaço
         menuToggle.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
