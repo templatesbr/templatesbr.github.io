@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Templatesbr</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -18,6 +18,61 @@
             color: white;
             padding: 4rem 0;
             text-align: center;
+        }
+
+        /* Menu mobile styles */
+        .hamburger {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .hamburger-top,
+        .hamburger-middle,
+        .hamburger-bottom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 2px;
+            background: #1f2937;
+            transform: rotate(0);
+            transition: all 0.5s;
+        }
+
+        .hamburger-middle {
+            transform: translateY(7px);
+        }
+
+        .hamburger-bottom {
+            transform: translateY(14px);
+        }
+
+        .open {
+            transform: rotate(90deg);
+        }
+
+        .open .hamburger-top {
+            transform: rotate(45deg) translateY(6px) translate(6px);
+        }
+
+        .open .hamburger-middle {
+            display: none;
+        }
+
+        .open .hamburger-bottom {
+            transform: rotate(-45deg) translateY(6px) translate(-6px);
+        }
+
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
         }
 
         .modal {
@@ -91,106 +146,59 @@
         .btn-custom:hover {
             transform: scale(1.05);
         }
-
-        /* Menu responsivo */
-        .menu-toggle {
-            display: none;
-            cursor: pointer;
-            flex-direction: column;
-            justify-content: center;
-            height: 24px;
-            width: 30px;
-            gap: 5px;
-        }
-
-        .menu-toggle div {
-            width: 100%;
-            height: 3px;
-            background-color: #4b5563; /* cinza escuro */
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                position: fixed;
-                top: 64px; /* altura do header */
-                right: 0;
-                background: white;
-                width: 250px;
-                height: calc(100% - 64px);
-                box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-                display: flex;
-                flex-direction: column;
-                padding: 1rem;
-                z-index: 999;
-            }
-
-            nav.active {
-                transform: translateX(0);
-            }
-
-            nav a {
-                padding: 1rem 0;
-                border-bottom: 1px solid #e5e7eb;
-                color: #4b5563;
-                font-weight: 600;
-                text-decoration: none;
-            }
-
-            nav a:hover {
-                color: #06048d;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-        }
-
-        /* Animação do botão hamburguer */
-        .menu-toggle.active div:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.active div:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.active div:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
     </style>
 </head>
 
 <body class="text-gray-800">
     <!-- Header -->
-    <header class="bg-white shadow-md fixed w-full z-30">
+    <header class="bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
             <h1 class="text-2xl font-bold text-gray-900">TemplatesBR</h1>
-
-            <!-- Botão menu hamburguer para mobile -->
-            <div class="menu-toggle" id="menuToggle" aria-label="Abrir menu" role="button" tabindex="0">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-
-            <nav id="navMenu" aria-label="Menu principal">
-                <a href="#templates" class="hover:text-gray-900">Templates</a>
-                <a href="#" id="openModal" class="hover:text-gray-900">Tabela Preços</a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex">
+                <a href="#templates" class="text-gray-600 hover:text-gray-900 px-4">Templates</a>
+                <a href="#" id="openModal" class="text-gray-600 hover:text-gray-900 px-4">Tabela Preços</a>
             </nav>
+
+            <!-- Mobile hamburger menu -->
+            <div class="md:hidden">
+                <button id="menu-btn" class="hamburger focus:outline-none">
+                    <span class="hamburger-top"></span>
+                    <span class="hamburger-middle"></span>
+                    <span class="hamburger-bottom"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="menu" class="mobile-menu md:hidden fixed top-0 left-0 w-3/4 h-full bg-white shadow-2xl z-40">
+            <div class="flex flex-col p-6 mt-16 space-y-6">
+                <a href="#templates" class="mobile-link text-gray-600 hover:text-gray-900 text-lg">Templates</a>
+                <a href="#" id="openModalMobile" class="mobile-link text-gray-600 hover:text-gray-900 text-lg">Tabela Preços</a>
+            </div>
+        </div>
+
+        <!-- Mobile menu overlay -->
+        <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden hidden"></div>
+
+        <!-- Modal -->
+        <div id="priceModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <img src="..\Site templatesbr\Fotos\tabela.png" alt="Tabela de Preços"
+                    style="max-width: 100%; height: auto;">
+            </div>
         </div>
     </header>
 
-    <div style="max-width: 600px; margin: 80px auto 0 auto;">
+    <div style="max-width: 600px; margin: 0 auto;">
         <img id="tabela-precos" src="..\Site templatesbr\Fotos\tabela.png" alt="Tabela de Preços"
             style="display: none; width: 100%; height: auto;" />
     </div>
 
     <!-- Hero Section -->
-    <section class="hero-section pt-32">
+    <section class="hero-section">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl md:text-6xl font-bold mb-4">Templates Profissionais</h2>
             <p class="text-xl md:text-2xl mb-8">Explore nossa coleção de templates modernos para impulsionar seu
@@ -207,15 +215,16 @@
                 <!-- Template 1 -->
                 <div class="template-card p-6">
                     <div class="mb-4">
-                        <img src="../Site templatesbr/Fotos/FotoStudio.png" class="w-full h-48 object-cover rounded" />
+                        <img src="../Site templatesbr/Fotos/FotoStudio.png" class="w-full h-48 object-cover rounded">
                     </div>
                     <h4 class="text-xl font-semibold mb-2">Template Portfólio</h4>
                     <p class="mb-4">Template responsivo para portfólios — perfeito para fotógrafos ou outros negócios
-                        (como restaurantes)</p>
+                        (como restaurantes)</p>--Aumente a qualidade do video para uma experiencia melhor --
 
                     <div class="mb-4">
                         <iframe src="https://drive.google.com/file/d/1UKuovaIzTbwJlHJztIn4_KOwlixAiGgq/preview"
-                            class="w-full h-48 rounded" allow="autoplay"></iframe>
+                            class="w-full h-48 rounded" allow="autoplay">
+                        </iframe>
                     </div>
 
                     <a href="https://wa.me/5568992547857?text=Olá!%20Tenho%20interesse%20no%20template%20do%20site.%20Pode%20me%20passar%20mais%20informações?"
@@ -227,30 +236,37 @@
                 <!-- Template 2 -->
                 <div class="template-card p-6">
                     <div class="mb-4">
-                        <img src="..\Site templatesbr\Fotos\brasas.png" class="w-full h-48 object-cover rounded" />
+                        <img src="..\Site templatesbr\Fotos\brasas.png" class="w-full h-48 object-cover rounded">
                     </div>
                     <h4 class="text-xl font-semibold mb-2">Template Restaurante</h4>
-                    <p class="mb-4">Ideal para restaurantes que buscam expandir através da internet</p>
+                    <p class="mb-4">Ideal para restaurantes que buscam expandir através da internet
+                    </p>--Aumente a qualidade do video para uma experiencia melhor --
                     <div class="mb-4">
                         <iframe src="https://drive.google.com/file/d/1YrevxAFhjWtgfS6lnxRlvziTzmU1lQ3F/preview"
-                            class="w-full h-48 rounded" allow="autoplay" allowfullscreen></iframe>
+                            class="w-full h-48 rounded" allow="autoplay" allowfullscreen>
+                        </iframe>
+
                     </div>
                     <a href="https://wa.me/5568992547857?text=Olá!%20Tenho%20interesse%20no%20template%20do%20site.%20Pode%20me%20passar%20mais%20informações?"
                         target="_blank" class="btn-custom mt-4">
                         Comprar R$ 70,00
                     </a>
                 </div>
+
                 <!-- Template 3 -->
                 <div class="template-card p-6">
                     <div class="mb-4">
-                        <img src="..\Site templatesbr\Fotos\arquitetura.png" class="w-full h-48 object-cover rounded" />
+                        <img src="..\Site templatesbr\Fotos\arquitetura.png" class="w-full h-48 object-cover rounded">
                     </div>
                     <h4 class="text-xl font-semibold mb-2">Template ideal para destacar seu trabalho</h4>
                     <p class="mb-4">Perfeito para advogados, arquitetos e outros profissionais autônomos</p>
+                    --Aumente a qualidade do video para uma experiencia melhor --
 
                     <div class="mb-4">
                         <iframe src="https://drive.google.com/file/d/1_Md2rRA5fXALnRQPODrHnr4axBSezfo0/preview"
-                            class="w-full h-48 rounded" allow="autoplay" allowfullscreen></iframe>
+                            class="w-full h-48 rounded" allow="autoplay" allowfullscreen>
+                        </iframe>
+
                     </div>
                     <a href="https://wa.me/5568992547857?text=Olá!%20Tenho%20interesse%20no%20template%20do%20site.%20Pode%20me%20passar%20mais%20informações?"
                         target="_blank" class="btn-custom mt-4">
@@ -258,15 +274,6 @@
                     </a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Mensagem adicional no final do site -->
-    <section class="bg-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-lg text-gray-700 font-semibold">
-                Não temos só esses templates! Você pode pedir o seu e personalizar do jeito que quiser.
-            </p>
         </div>
     </section>
 
@@ -278,46 +285,68 @@
     </footer>
 
     <script>
+        // Mobile menu functionality
+        const menuBtn = document.getElementById('menu-btn');
+        const menu = document.getElementById('menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            menuBtn.classList.toggle('open');
+            menu.classList.toggle('active');
+            menuOverlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        function closeMenu() {
+            menuBtn.classList.remove('open');
+            menu.classList.remove('active');
+            menuOverlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Close menu when clicking on mobile links
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
         // Função para rolar suave para a seção de templates
         function scrollToTemplates() {
             document.getElementById('templates').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Modal
+        // Modal functionality - Pegando os elementos
         const modal = document.getElementById('priceModal');
         const openModalBtn = document.getElementById('openModal');
+        const openModalMobileBtn = document.getElementById('openModalMobile');
         const closeBtn = modal.querySelector('.close');
 
-        openModalBtn.addEventListener('click', function (e) {
-            e.preventDefault();
+        function openModal(e) {
+            e.preventDefault(); // Evita o link padrão
             modal.style.display = 'flex';
+        }
+
+        // Abrir modal - desktop
+        openModalBtn.addEventListener('click', openModal);
+
+        // Abrir modal - mobile
+        openModalMobileBtn.addEventListener('click', (e) => {
+            closeMenu(); // Fecha o menu mobile primeiro
+            setTimeout(() => openModal(e), 300); // Pequeno delay para suavizar
         });
 
+        // Fechar modal quando clicar no "x"
         closeBtn.addEventListener('click', function () {
             modal.style.display = 'none';
         });
 
+        // Fechar modal quando clicar fora do conteúdo
         window.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.style.display = 'none';
-            }
-        });
-
-        // Menu responsivo
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-        });
-
-        // Acessibilidade: abrir/fechar menu com Enter ou Espaço
-        menuToggle.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                navMenu.classList.toggle('active');
-                menuToggle.classList.toggle('active');
             }
         });
     </script>
